@@ -8,7 +8,8 @@ spacecraft_journey_controller = Blueprint('spacecraft_journey_controller', __nam
 
 @spacecraft_journey_controller.route('/api/spacecrafts')
 def get_all_journeys():
-    return apollo_service.get_all_spacecraft_journeys()
+    result = apollo_service.get_all_spacecraft_journeys()
+    return jsonify(result.current_rows), 200
 
 
 @spacecraft_journey_controller.route('/api/spacecrafts/<spacecraft_name>', methods=['GET', 'POST'])
