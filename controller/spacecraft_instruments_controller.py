@@ -17,8 +17,8 @@ def location_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_location_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                             request.args['pageSize'],
-                                                                             request.args['pageState'])
+                                                                             request.args.get('pageSize', 25),
+                                                                             request.args.get('pageState', None))
 
         return jsonify(pageSize=request.args['pageSize'], pageState=result.paging_state, data=result.current_rows), 200
 
@@ -35,8 +35,8 @@ def pressure_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_pressure_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                             request.args['pageSize'],
-                                                                             request.args['pageState'])
+                                                                             request.args.get('pageSize', 25),
+                                                                             request.args.get('pageState', None))
 
         return jsonify(pageSize=request.args['pageSize'], pageState=result.paging_state, data=result.current_rows), 200
 
@@ -53,7 +53,7 @@ def speed_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_speed_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                          request.args['pageSize'],
+                                                                          request.args.get('pageSize', 25),
                                                                           request.args.get('pageState', None))
 
         return jsonify(pageSize=request.args['pageSize'], pageState=result.paging_state, data=result.current_rows), 200
@@ -71,8 +71,8 @@ def temperature_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_temperature_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                                request.args['pageSize'],
-                                                                                request.args['pageState'])
+                                                                                request.args.get('pageSize', 25),
+                                                                                request.args.get('pageState', None))
 
         return jsonify(pageSize=request.args['pageSize'], pageState=result.paging_state, data=result.current_rows), 200
 
