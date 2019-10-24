@@ -47,15 +47,16 @@ cd getting-started-with-apollo-python
 
 Fire up the engines
 ```
-FLASK_APP=getting_started_with_apollo.py flask run
+FLASK_ENV=development FLASK_APP=getting_started_with_apollo.py flask run
 ```
 
-You should be met with the following output
+You should be met with the following output, note that it's running on `localhost` and port `5000`
 ```
- * Serving Flask app "getting_started_with_apollo.py"
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
- * Debug mode: off
+ * Serving Flask app "getting_started_with_apollo.py" (lazy loading)
+ * Environment: development
+ * Debug mode: on
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 204-527-831
 ```
