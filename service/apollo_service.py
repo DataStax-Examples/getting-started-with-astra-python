@@ -81,29 +81,29 @@ class ApolloService(object):
         return self.get_spacecraft_location_dao().get_location_readings_for_journey(spacecraft_name, journey_id,
                                                                                     page_size, page_state)
 
-    def save_location_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, location, location_unit, reading_time):
-        self.get_spacecraft_location_dao().write_reading(spacecraft_name, journey_id, location, location_unit, reading_time)
+    def save_location_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, data):
+        self.get_spacecraft_location_dao().write_readings(spacecraft_name, journey_id, data)
 
     def get_pressure_readings_for_spacecraft_journey(self, spacecraft_name, journey_id, page_size, page_state):
         return self.get_spacecraft_pressure_dao().get_pressure_readings_for_journey(spacecraft_name, journey_id,
                                                                                     page_size, page_state)
 
-    def save_pressure_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, pressure, pressure_unit, reading_time):
-        self.get_spacecraft_pressure_dao().write_reading(spacecraft_name, journey_id, pressure, pressure_unit, reading_time)
+    def save_pressure_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, data):
+        self.get_spacecraft_pressure_dao().write_readings(spacecraft_name, journey_id, data)
 
     def get_speed_readings_for_spacecraft_journey(self, spacecraft_name, journey_id, page_size, page_state):
         return self.get_spacecraft_speed_dao().get_speed_readings_for_journey(spacecraft_name, journey_id,
                                                                               page_size, page_state)
 
-    def save_speed_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, speed, speed_unit, reading_time):
-        self.get_spacecraft_speed_dao().write_reading(spacecraft_name, journey_id, speed, speed_unit, reading_time)
+    def save_speed_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, data):
+        self.get_spacecraft_speed_dao().write_readings(spacecraft_name, journey_id, data)
 
     def get_temperature_readings_for_spacecraft_journey(self, spacecraft_name, journey_id, page_size, page_state):
         return self.get_spacecraft_temperature_dao().get_temperature_readings_for_journey(spacecraft_name, journey_id,
                                                                                           page_size, page_state)
 
-    def save_temperature_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, temperature, tempearture_unit, reading_time):
-        self.get_spacecraft_location_dao().write_reading(spacecraft_name, journey_id, temperature, tempearture_unit, reading_time)
+    def save_temperature_reading_for_spacecraft_journey(self, spacecraft_name, journey_id, data):
+        self.get_spacecraft_temperature_dao().write_readings(spacecraft_name, journey_id, data)
 
 
 apollo_service = ApolloService()

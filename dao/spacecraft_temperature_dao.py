@@ -1,8 +1,6 @@
-from uuid import UUID
-from datetime import datetime
-
+from data_type_util import uuid_from_string, format_timestamp
 from cql_file_util import get_cql_schema_string_from_file
-from cassandra.query import BoundStatement
+from cassandra.query import BoundStatement, BatchStatement, BatchType
 
 
 class SpacecraftTemperatureDAO(object):
@@ -28,33 +26,27 @@ class SpacecraftTemperatureDAO(object):
     def maybe_create_schema(self):
         self._session.execute(self.create_stmt)
 
-    def write_reading(self, spacecraft_name, journey_id, temperature, temperature_unit, reading_time):
-        journey_id = UUID('{u}'.format(u=journey_id))
-        temperature = float(temperature)
-        reading_time = datetime.strptime(reading_time.replace('0000', '').replace('+', '').strip(), '%Y-%m-%dT%H:%M:%S')
+    def write_readings(self, spacecraft_name, journey_id, data):
+        batch = BatchStatement()
+        batch.batch_type = BatchType.UNLOGGED
 
-        def handle_success(results):
-            print 'Successfully wrote row'
+        for row in data:
+            print row
+            batch.add(self.insert_prep_stmt.bind({
+                'spacecraft_name': spacecraft_name,
+                'journey_id': uuid_from_string(journey_id),
+                'temperature': float(row['temperature']),
+                'temperature_unit': row['temperature_unit'],
+                'reading_time': format_timestamp(row['reading_time'])}
+            ))
 
-        def handle_error(exception):
-            raise Exception('Failed to write row: ' + exception)
+        self._session.execute(batch)
 
-        insert_future = self._session.execute_async(self.insert_prep_stmt.bind({
-            'spacecraft_name': spacecraft_name,
-            'journey_id': journey_id,
-            'temperature': temperature,
-            'temperature_unit': temperature_unit,
-            'reading_time': reading_time}
-        ))
-
-        insert_future.add_callbacks(handle_success, handle_error)
-
-    def get_temperature_readings_for_journey(self, spacecraft_name, journey_id, page_size, page_state):
-        journey_id = UUID('{u}'.format(u=journey_id))
-
+    def get_temperature_readings_for_journey(self, spacecraft_name, journey_id, page_size=25, page_state=None):
         stmt = BoundStatement(self.select_prep_stmt, fetch_size=int(page_size)).bind(
             {'spacecraft_name': spacecraft_name,
-             'journey_id': journey_id})
-        result = self._session.execute(stmt, paging_state=page_state)
+             'journey_id': uuid_from_string(journey_id)}
+        )
+        result = self._session.execute(stmt, paging_state=page_state.decode('hex') if page_state else None)
 
         return result

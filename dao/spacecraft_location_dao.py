@@ -1,15 +1,20 @@
-from uuid import UUID
-from datetime import datetime
-
+from data_type_util import format_timestamp, uuid_from_string
 from cql_file_util import get_cql_schema_string_from_file
-from cassandra.query import BoundStatement
+from cassandra.query import BoundStatement, BatchStatement, BatchType
 
+
+class LocationUDT(object):
+
+    def __init__(self, x_coordinate, y_coordinate, z_coordinate):
+        self.x_coordinate = x_coordinate
+        self.y_coordinate = y_coordinate
+        self.z_coordinate = z_coordinate
 
 class SpacecraftLocationDAO(object):
 
     table_name = "spacecraft_location_over_time"
 
-    type_name = "location_type"
+    type_name = "location_udt"
 
     create_stmt = get_cql_schema_string_from_file(table_name)
 
@@ -23,8 +28,8 @@ class SpacecraftLocationDAO(object):
 
     def __init__(self, _session):
         self._session = _session
-        self.maybe_create_schema()
         self.maybe_create_location_type()
+        self.maybe_create_schema()
         self.insert_prep_stmt = _session.prepare(self.insert_stmt)
         self.select_prep_stmt = _session.prepare(self.select_stmt)
         self.page_state = None
@@ -35,34 +40,28 @@ class SpacecraftLocationDAO(object):
     def maybe_create_location_type(self):
         self._session.execute(self.create_location_type_stmt)
 
-    def write_reading(self, spacecraft_name, journey_id, location, location_unit, reading_time):
-        journey_id = UUID('{u}'.format(u=journey_id))
-        location = location.split(',')
-        reading_time = datetime.strptime(reading_time.replace('0000', '').replace('+', '').strip(), '%Y-%m-%dT%H:%M:%S')
+    def write_readings(self, spacecraft_name, journey_id, data):
+        batch = BatchStatement()
+        batch.batch_type = BatchType.UNLOGGED
 
-        def handle_success(results):
-            print 'Successfully wrote row'
+        for row in data:
+            batch.add(self.insert_prep_stmt.bind({
+                'spacecraft_name': spacecraft_name,
+                'journey_id': uuid_from_string(journey_id),
+                'location': LocationUDT(row['location']['x_coordinate'],
+                                        row['location']['y_coordinate'],
+                                        row['location']['y_coordinate']),
+                'location_unit': row['location_unit'],
+                'reading_time': format_timestamp(row['reading_time'])}
+            ))
 
-        def handle_error(exception):
-            raise Exception('Failed to write row: ' + exception)
+        self._session.execute(batch)
 
-        insert_future = self._session.execute_async(self.insert_prep_stmt.bind({
-            'spacecraft_name': spacecraft_name,
-            'journey_id': journey_id,
-            'location': {location[0], location[1], location[2]},
-            'location_unit': location_unit,
-            'reading_time': reading_time}
-        ))
-
-        insert_future.add_callbacks(handle_success, handle_error)
-
-    def get_location_readings_for_journey(self, spacecraft_name, journey_id, page_size, page_state=None):
-        journey_id = UUID('{u}'.format(u=journey_id))
-
+    def get_location_readings_for_journey(self, spacecraft_name, journey_id, page_size=25, page_state=None):
         stmt = BoundStatement(self.select_prep_stmt, fetch_size=int(page_size)).bind({
             'spacecraft_name': spacecraft_name,
-            'journey_id': journey_id}
+            'journey_id': uuid_from_string(journey_id)}
         )
-        result = self._session.execute(stmt, paging_state=page_state)
+        result = self._session.execute(stmt, paging_state=page_state.decode('hex') if page_state else None)
 
         return result

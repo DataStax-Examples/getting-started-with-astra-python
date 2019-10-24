@@ -1,6 +1,6 @@
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
-from cassandra.query import ordered_dict_factory
+from cassandra.query import dict_factory
 from cassandra import Unauthorized, Unavailable, AuthenticationFailed, OperationTimedOut, ReadTimeout
 
 
@@ -46,7 +46,7 @@ class SessionManager(object):
             result = temp_session.execute(self.ping_query)
             success = True
         except (Unauthorized, Unavailable, AuthenticationFailed, OperationTimedOut, ReadTimeout) as e:
-            print e
+            raise e
         finally:
             if temp_session is not None:
                 temp_session.shutdown()
@@ -63,7 +63,7 @@ class SessionManager(object):
 
             cluster = Cluster(cloud=apollo_config, auth_provider=PlainTextAuthProvider(self.username, self.password))
             self._session = cluster.connect(keyspace=self.keyspace)
-            self._session.row_factory = ordered_dict_factory
+            self._session.row_factory = dict_factory
 
         return self._session
 

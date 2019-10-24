@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS spacecraft_pressure_over_time (
     PRIMARY KEY ((spacecraft_name, journey_id), reading_time)
 ) WITH CLUSTERING ORDER BY (reading_time DESC);
 
-CREATE TYPE IF NOT EXISTS location (
+CREATE TYPE IF NOT EXISTS location_udt (
     x_coordinate double,
     y_coordinate double,
     z_coordinate double);
@@ -43,7 +43,7 @@ CREATE TYPE IF NOT EXISTS location (
 CREATE TABLE IF NOT EXISTS spacecraft_location_over_time (
     spacecraft_name text,
     journey_id timeuuid,
-    location frozen<location>,
+    location frozen<location_udt>,
     location_unit text,
     reading_time timestamp,
     PRIMARY KEY ((spacecraft_name, journey_id), reading_time)

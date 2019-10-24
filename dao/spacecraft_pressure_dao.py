@@ -1,8 +1,6 @@
-from uuid import UUID
-from datetime import datetime
-
+from data_type_util import format_timestamp, uuid_from_string
 from cql_file_util import get_cql_schema_string_from_file
-from cassandra.query import BoundStatement
+from cassandra.query import BoundStatement, BatchStatement, BatchType
 
 
 class SpacecraftPressureDAO(object):
@@ -27,34 +25,26 @@ class SpacecraftPressureDAO(object):
     def maybe_create_schema(self):
         self._session.execute(self.create_stmt)
 
-    def write_reading(self, spacecraft_name, journey_id, pressure, pressure_unit, reading_time):
-        journey_id = UUID('{u}'.format(u=journey_id))
-        pressure = float(pressure)
-        reading_time = datetime.strptime(reading_time.replace('0000', '').replace('+', '').strip(), '%Y-%m-%dT%H:%M:%S')
+    def write_readings(self, spacecraft_name, journey_id, data):
+        batch = BatchStatement()
+        batch.batch_type = BatchType.UNLOGGED
 
-        def handle_success(results):
-            print 'Successfully wrote row'
+        for row in data:
+            batch.add(self.insert_prep_stmt.bind({
+                'spacecraft_name': spacecraft_name,
+                'journey_id': uuid_from_string(journey_id),
+                'pressure': float(row['pressure']),
+                'pressure_unit': row['pressure_unit'],
+                'reading_time': format_timestamp(row['reading_time'])}
+            ))
 
-        def handle_error(exception):
-            raise Exception('Failed to write row: ' + exception)
+        self._session.execute(batch)
 
-        insert_future = self._session.execute_async(self.insert_prep_stmt.bind({
-            'spacecraft_name': spacecraft_name,
-            'journey_id': journey_id,
-            'pressure': pressure,
-            'pressure_unit': pressure_unit,
-            'reading_time': reading_time}
-        ))
-
-        insert_future.add_callbacks(handle_success, handle_error)
-
-    def get_pressure_readings_for_journey(self,  spacecraft_name, journey_id, page_size, page_state=None):
-        journey_id = UUID('{u}'.format(u=journey_id))
-
+    def get_pressure_readings_for_journey(self,  spacecraft_name, journey_id, page_size=25, page_state=None):
         stmt = BoundStatement(self.select_prep_stmt, fetch_size=int(page_size)).bind({
             'spacecraft_name': spacecraft_name,
-            'journey_id': journey_id}
+            'journey_id': uuid_from_string(journey_id)}
         )
-        result = self._session.execute(stmt, paging_state=page_state)
+        result = self._session.execute(stmt, paging_state=page_state.decode('hex') if page_state else None)
 
         return result
