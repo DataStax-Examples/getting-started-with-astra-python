@@ -1,4 +1,4 @@
-from data_type_util import format_timestamp, uuid_from_string
+from dao.data_type_util import format_timestamp, uuid_from_string
 from cql_file_util import get_cql_schema_string_from_file
 from cassandra.query import BoundStatement, BatchStatement, BatchType
 
