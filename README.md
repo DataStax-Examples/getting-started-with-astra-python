@@ -6,7 +6,7 @@ If you are familiar with Python, then you've likely gotten your hands on Python 
 We'll be leveraging pyenv while setting up this backend, which will serve our
 Spacecraft frontend that will have you flying through the stars.
 
-If you aren't familiar with Python, hop over to our [official documentation] (https://helpdocs.datastax.com/aws/dscloud/apollo/dscloudPythonDriver.html#Installingpyenv,Python,andvirtualenv)
+If you aren't familiar with Python, hop over to our [official documentation](https://helpdocs.datastax.com/aws/dscloud/apollo/dscloudPythonDriver.html#Installingpyenv,Python,andvirtualenv)
 for setting that up on your machine, and come back here after you have it installed ( specifically after Step 5 of the Procedure ).
 
 Now that we have that out of the way, we'll use pyenv to install Python 3.6.9
