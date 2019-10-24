@@ -32,7 +32,7 @@ Woot, now 2 quick dependencies ( Flask and the DataStax Cassandra Driver )
 pip install Flask https://datastax.artifactoryonline.com/datastax/datastax-public-releases-local/python-driver/cassandra-driver-3.19.0.20190927+dbaas.zip
 ```
 
-Last one, clone this repo and go to it
+Last one, clone this repo
 ```
 git clone https://github.com/csplinter/getting-started-with-apollo-python.git
 ```
