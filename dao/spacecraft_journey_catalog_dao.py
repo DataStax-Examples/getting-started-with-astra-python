@@ -8,15 +8,15 @@ class SpacecraftJourneyCatalogDAO(object):
     create_stmt = get_cql_schema_string_from_file(table_name)
 
     insert_stmt = 'INSERT INTO {table_name} (spacecraft_name, journey_id, start, end, active, summary) ' \
-                  'VALUES (?,?,?,?,?,?);'.format(table_name=table_name)
+                  'VALUES (:spacecraft_name,:journey_id,:start,:end,:active,:summary);'.format(table_name=table_name)
 
     select_all_journeys_stmt = 'SELECT * FROM {table_name};'.format(table_name=table_name)
 
-    select_all_journeys_for_spacecraft_stmt = 'SELECT * FROM {table_name} WHERE spacecraft_name = ?;' \
+    select_all_journeys_for_spacecraft_stmt = 'SELECT * FROM {table_name} WHERE spacecraft_name = :spacecraft_name;' \
                                               ''.format(table_name=table_name)
 
     select_single_journey_for_spacecraft_stmt = 'SELECT * FROM {table_name} ' \
-                                                'WHERE spacecraft_name = ? AND journey_id = ?;' \
+                                                'WHERE spacecraft_name = :spacecraft_name AND journey_id = :journey_id;' \
                                                 ''.format(table_name=table_name)
 
     def __init__(self, _session):
@@ -38,8 +38,14 @@ class SpacecraftJourneyCatalogDAO(object):
         def handle_error(exception):
             raise Exception('Failed to write row: ' + exception)
 
-        insert_future = self._session.execute_async(self.insert_prep_stmt.bind([spacecraft_name, journey_id, start,
-                                                                                end, active, summary]))
+        insert_future = self._session.execute_async(self.insert_prep_stmt.bind({
+            'spacecraft_name': spacecraft_name,
+            'journey_id': journey_id,
+            'start': start,
+            'end': end,
+            'active': active,
+            'summary': summary}
+        ))
 
         insert_future.add_callbacks(handle_success, handle_error)
 
@@ -48,10 +54,15 @@ class SpacecraftJourneyCatalogDAO(object):
         return result
 
     def get_all_journeys_for_spacecraft(self, spacecraft_name):
-        result = self._session.execute(self.select_all_for_spacecraft_prep_stmt.bind([spacecraft_name]))
+        result = self._session.execute(self.select_all_for_spacecraft_prep_stmt.bind({
+            'spacecraft_name': spacecraft_name}
+        ))
         return result
 
     def get_single_journey_for_spacecraft(self, spacecraft_name, journey_id):
-        result = self._session.execute(self.select_single_for_spacecraft_prep_stmt.bind([spacecraft_name, journey_id]))
+        result = self._session.execute(self.select_single_for_spacecraft_prep_stmt.bind({
+            'spacecraft_name': spacecraft_name,
+            'journey_id': journey_id}
+        ))
 
         return result
