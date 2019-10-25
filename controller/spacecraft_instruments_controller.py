@@ -1,8 +1,12 @@
+import codecs
 from flask import Blueprint, request
+from flask_cors import CORS
 
 from service.apollo_service import apollo_service
 
 spacecraft_instruments_controller = Blueprint('spacecraft_instruments_controller', __name__)
+
+CORS(spacecraft_instruments_controller)
 
 
 @spacecraft_instruments_controller.route('/api/spacecraft/<spacecraft_name>/<journey_id>/instruments/location',
@@ -14,11 +18,11 @@ def location_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_location_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                             request.args.get('pageSize', 25),
-                                                                             request.args.get('pageState', None))
+                                                                             request.args.get('pagesize', 25),
+                                                                             request.args.get('pagestate', None))
 
-        resp = {'pageSize': request.args.get('pageSize', 25),
-                'pageState': result.paging_state.encode('hex') if result.paging_state else None,
+        resp = {'pageSize': request.args.get('pagesize', 25),
+                'pageState': codecs.encode(result.paging_state, 'hex').decode('UTF-8') if result.paging_state else None,
                 'data': result.current_rows}
 
         return resp, 200
@@ -33,11 +37,11 @@ def pressure_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_pressure_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                             request.args.get('pageSize', 25),
-                                                                             request.args.get('pageState', None))
+                                                                             request.args.get('pagesize', 25),
+                                                                             request.args.get('pagestate', None))
 
-        resp = {'pageSize': request.args.get('pageSize', 25),
-                'pageState': result.paging_state.encode('hex') if result.paging_state else None,
+        resp = {'pageSize': request.args.get('pagesize', 25),
+                'pageState': codecs.encode(result.paging_state, 'hex').decode('UTF-8') if result.paging_state else None,
                 'data': result.current_rows}
 
         return resp, 200
@@ -52,11 +56,11 @@ def speed_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_speed_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                          request.args.get('pageSize', 25),
-                                                                          request.args.get('pageState', None))
+                                                                          request.args.get('pagesize', 25),
+                                                                          request.args.get('pagestate', None))
 
-        resp = {'pageSize': request.args.get('pageSize', 25),
-                'pageState': result.paging_state.encode('hex') if result.paging_state else None,
+        resp = {'pageSize': request.args.get('pagesize', 25),
+                'pageState': codecs.encode(result.paging_state, 'hex').decode('UTF-8') if result.paging_state else None,
                 'data': result.current_rows}
 
         return resp, 200
@@ -71,10 +75,11 @@ def temperature_reading_for_spacecraft_journey(spacecraft_name, journey_id):
 
     if request.method == 'GET':
         result = apollo_service.get_temperature_readings_for_spacecraft_journey(spacecraft_name, journey_id,
-                                                                                request.args.get('pageSize', 25),
-                                                                                request.args.get('pageState', None))
-        resp = {'pageSize': request.args.get('pageSize', 25),
-                'pageState': result.paging_state.encode('hex') if result.paging_state else None,
+                                                                                request.args.get('pagesize', 25),
+                                                                                request.args.get('pagestate', None))
+
+        resp = {'pageSize': request.args.get('pagesize', 25),
+                'pageState': codecs.encode(result.paging_state, 'hex').decode('UTF-8') if result.paging_state else None,
                 'data': result.current_rows}
 
         return resp, 200

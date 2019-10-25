@@ -33,7 +33,7 @@ class SpacecraftJourneyCatalogDAO(object):
     def write_journey(self, spacecraft_name, journey_id, start, end, active, summary):
 
         def handle_success(results):
-            print('Successfully wrote row')
+            pass
 
         def handle_error(exception):
             raise Exception('Failed to write row: ' + exception)
