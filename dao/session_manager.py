@@ -4,6 +4,9 @@ from cassandra.query import dict_factory
 from cassandra import Unauthorized, Unavailable, AuthenticationFailed, OperationTimedOut, ReadTimeout
 
 
+# Sharing a DataStax Driver Session object throughout the application is a best practice
+# Here we use a Singleton pattern to ensure that we will be re-using the same Session instance
+# wherever we make calls to the database
 class SessionManager(object):
 
     __instance = None
@@ -36,6 +39,9 @@ class SessionManager(object):
         temp_session = None
         success = False
         try:
+            # This is how you use the Apollo secure connect bundle to connect to an Apollo database
+            # note that the database username and password required.
+            # note that no contact points or any other driver customization is required.
             apollo_config = {
                 'secure_connect_bundle': secure_connection_bundle_path
             }
@@ -57,13 +63,21 @@ class SessionManager(object):
             raise Exception('Please initialize the connection parameters first with SessionManager.save_credentials')
 
         if self._session is None:
+            # This is how you use the Apollo secure connect bundle to connect to an Apollo database
+            # note that the database username and password required.
+            # note that no contact points or any other driver customization is required.
             apollo_config = {
                 'secure_connect_bundle': self.secure_connect_bundle_path
             }
 
             cluster = Cluster(cloud=apollo_config, auth_provider=PlainTextAuthProvider(self.username, self.password))
             self._session = cluster.connect(keyspace=self.keyspace)
+
+            # have the driver return results as dict
             self._session.row_factory = dict_factory
+
+            # have the driver return LocationUDT as a dict
+            cluster.register_user_type(self.keyspace, 'location_udt', dict)
 
         return self._session
 

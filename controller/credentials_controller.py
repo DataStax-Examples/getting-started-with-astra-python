@@ -9,6 +9,10 @@ credentials_controller = Blueprint('credentials_controller', __name__)
 CORS(credentials_controller)
 
 
+# This controller handles the functionality for connecting to the database
+#
+# Here we define the REST API endpoints and call our Apollo Service
+# to send the request to the underlying Data Access Objects
 @credentials_controller.route("/api/credentials", methods=['GET', 'POST'])
 def connect():
     if request.method == 'POST':

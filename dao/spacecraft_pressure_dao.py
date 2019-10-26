@@ -1,9 +1,12 @@
 import codecs
-from dao.data_type_util import format_timestamp, uuid_from_string
-from cql_file_util import get_cql_schema_string_from_file
 from cassandra.query import BoundStatement, BatchStatement, BatchType
+from util.data_type_util import uuid_from_string
+from util.cql_file_util import get_cql_schema_string_from_file
+from model.spacecraft_pressure import SpacecraftPressure
 
 
+# Data Access Object for the spacecraft_pressure_over_time database table
+# Contains CQL Statements and DataStax Driver APIs for reading and writing from the database
 class SpacecraftPressureDAO(object):
 
     table_name = "spacecraft_pressure_over_time"
@@ -27,16 +30,20 @@ class SpacecraftPressureDAO(object):
         self._session.execute(self.create_stmt)
 
     def write_readings(self, spacecraft_name, journey_id, data):
+        # Batch Statements are used as a more efficient way to write groups of data to the server
+
         batch = BatchStatement()
         batch.batch_type = BatchType.UNLOGGED
 
         for row in data:
+            this_pressure_reading = SpacecraftPressure(spacecraft_name, journey_id, row)
+
             batch.add(self.insert_prep_stmt.bind({
-                'spacecraft_name': spacecraft_name,
-                'journey_id': uuid_from_string(journey_id),
-                'pressure': float(row['pressure']),
-                'pressure_unit': row['pressure_unit'],
-                'reading_time': format_timestamp(row['reading_time'])}
+                'spacecraft_name': this_pressure_reading.spacecraft_name,
+                'journey_id': this_pressure_reading.journey_id,
+                'pressure': this_pressure_reading.pressure,
+                'pressure_unit': this_pressure_reading.pressure_unit,
+                'reading_time': this_pressure_reading.reading_time}
             ))
 
         self._session.execute(batch)
@@ -46,6 +53,9 @@ class SpacecraftPressureDAO(object):
             'spacecraft_name': spacecraft_name,
             'journey_id': uuid_from_string(journey_id)}
         )
+
+        # note we must decode the page_state using the same codec as the encoding on the controller side
+        # this is necessary because the page state is a binary blob and can not be automatically handled by json
         result = self._session.execute(stmt, paging_state=codecs.decode(page_state, 'hex') if page_state else None)
 
         return result

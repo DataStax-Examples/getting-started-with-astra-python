@@ -9,6 +9,10 @@ spacecraft_journey_controller = Blueprint('spacecraft_journey_controller', __nam
 CORS(spacecraft_journey_controller)
 
 
+# This controller handles the all of the GET and POST REST API calls for the spacecraft_journey_catalog table
+#
+# Here we define the REST API endpoints and call our Apollo Service
+# to send the request to the underlying Data Access Objects
 @spacecraft_journey_controller.route('/api/spacecraft')
 def get_all_journeys():
     result = apollo_service.get_all_spacecraft_journeys()
