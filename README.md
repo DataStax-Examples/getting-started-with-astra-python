@@ -1,5 +1,17 @@
 # Getting Started with Apollo - Python backend
 
+This sample Python backend provides a REST API service that is used with the Getting Started with Apollo UI to show a
+simple example of how to connect to and query DataStax Apollo databases.
+
+## Project Layout
+- [getting_started_with_apollo.py](getting_started_with_apollo.py) - entrypoint for the backend, registers controller blueprints with Flask app
+- [schema.cql](schema.cql) - database schema used by the application
+- [service](service/) - acts as the middle-man to take requests from the controllers and calls the corresponding dao methods.
+Note how this and [session_manager.py](dao/session_manager.py) are used to share a single DataStax Driver Session across API requests, this is a best practice.
+- [model](model/) - defines the Python objects that correspond to the database tables
+- [dao](dao/) - methods for accessing the database, contains the DataStax Driver API calls
+- [controller](controller/) - defines the API endpoints using Flask decorators
+
 ## Setup
 
 If you are familiar with Python, then you've likely gotten your hands on Python virtual environments.
@@ -26,10 +38,10 @@ Almost off to the races, go ahead and activate that virtualenv
 pyenv activate apollo-venv
 ```
 
-Woot, now 2 quick dependencies ( Flask and the DataStax Cassandra Driver )
+Woot, now 3 quick dependencies ( Flask, Flask CORS,  and the DataStax Cassandra Driver )
 
 ```
-pip install Flask https://datastax.artifactoryonline.com/datastax/datastax-public-releases-local/python-driver/cassandra-driver-3.19.0.20190927+dbaas.zip
+pip install Flask flask-cors cassandra-driver
 ```
 
 Last one, clone this repo
