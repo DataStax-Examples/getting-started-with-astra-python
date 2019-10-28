@@ -1,6 +1,6 @@
 # Getting Started with Apollo - Python backend
 
-This sample Python backend provides a REST API service that is used with the Getting Started with Apollo UI to show a
+This sample Python backend provides a REST API service that is used with the [Getting Started with Apollo UI](https://github.com/DataStax-Examples/getting-started-with-apollo-ui) to show a
 simple example of how to connect to and query DataStax Apollo databases.
 
 ## Project Layout
