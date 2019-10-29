@@ -3,6 +3,13 @@
 This sample Python backend provides a REST API service that is used with the [Getting Started with Apollo UI](https://github.com/DataStax-Examples/getting-started-with-apollo-ui) to show a
 simple example of how to connect to and query DataStax Apollo databases.
 
+Contributor(s): [Chris Splinter](https://github.com/csplinter)
+
+## Objectives
+- How to connect to DataStax Apollo using the secure connect bundle
+- How to share a DataStax Driver Session throughout a Python application
+- How to expose a basic REST API using the DataStax Driver
+
 ## Project Layout
 - [getting_started_with_apollo.py](getting_started_with_apollo.py) - entrypoint for the backend, registers controller blueprints with Flask app
 - [schema.cql](schema.cql) - database schema used by the application
@@ -12,8 +19,14 @@ Note how this and [session_manager.py](dao/session_manager.py) are used to share
 - [dao](dao/) - methods for accessing the database, contains the DataStax Driver API calls
 - [controller](controller/) - defines the API endpoints using Flask decorators
 
-## Setup
+## How this works
+This project is built in Python and uses Flask to expose a REST API backend for use with the [Getting Started with Apollo UI](https://github.com/DataStax-Examples/getting-started-with-apollo-ui).
 
+This application is the middle man that receives requests from the UI web page and serves data from the underlying DataStax Apollo database.
+
+## Setup & Running
+
+### Setup
 If you are familiar with Python, then you've likely gotten your hands on Python virtual environments.
 We'll be leveraging pyenv while setting up this backend, which will serve our
 Spacecraft frontend that will have you flying through the stars.
@@ -46,10 +59,11 @@ pip install Flask flask-cors cassandra-driver
 
 Last one, clone this repo
 ```
-git clone https://github.com/csplinter/getting-started-with-apollo-python.git
+git clone https://github.com/DataStax-Examples
+/getting-started-with-apollo-python.git
 ```
 
-## Running
+### Running
 
 If everything above went smoothly, fingers crossed, then we are ready to rock.
 Go to the directory that you just cloned this repo into
@@ -72,3 +86,5 @@ You should be met with the following output, note that it's running on `localhos
  * Debugger is active!
  * Debugger PIN: 204-527-831
 ```
+
+Once the backend is running, you can start the [Getting Started with Apollo UI](https://github.com/DataStax-Examples/getting-started-with-apollo-ui) in order to use a web page that leverages this backend.
