@@ -39,14 +39,14 @@ class SessionManager(object):
         temp_session = None
         success = False
         try:
-            # This is how you use the Apollo secure connect bundle to connect to an Apollo database
+            # This is how you use the Astra secure connect bundle to connect to an Astra database
             # note that the database username and password required.
             # note that no contact points or any other driver customization is required.
-            apollo_config = {
+            astra_config = {
                 'secure_connect_bundle': secure_connection_bundle_path
             }
 
-            cluster = Cluster(cloud=apollo_config, auth_provider=PlainTextAuthProvider(username, password))
+            cluster = Cluster(cloud=astra_config, auth_provider=PlainTextAuthProvider(username, password))
 
             temp_session = cluster.connect(keyspace=keyspace)
             result = temp_session.execute(self.ping_query)
@@ -63,14 +63,14 @@ class SessionManager(object):
             raise Exception('Please initialize the connection parameters first with SessionManager.save_credentials')
 
         if self._session is None:
-            # This is how you use the Apollo secure connect bundle to connect to an Apollo database
+            # This is how you use the Astra secure connect bundle to connect to an Astra database
             # note that the database username and password required.
             # note that no contact points or any other driver customization is required.
-            apollo_config = {
+            astra_config = {
                 'secure_connect_bundle': self.secure_connect_bundle_path
             }
 
-            cluster = Cluster(cloud=apollo_config, auth_provider=PlainTextAuthProvider(self.username, self.password))
+            cluster = Cluster(cloud=astra_config, auth_provider=PlainTextAuthProvider(self.username, self.password))
             self._session = cluster.connect(keyspace=self.keyspace)
 
             # have the driver return results as dict
