@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, request
 from flask_cors import CORS
 
-from service.apollo_service import apollo_service
+from service.astra_service import astra_service
 
 credentials_controller = Blueprint('credentials_controller', __name__)
 
@@ -11,7 +11,7 @@ CORS(credentials_controller)
 
 # This controller handles the functionality for connecting to the database
 #
-# Here we define the REST API endpoints and call our Apollo Service
+# Here we define the REST API endpoints and call our Astra Service
 # to send the request to the underlying Data Access Objects
 @credentials_controller.route("/api/credentials", methods=['GET', 'POST'])
 def connect():
@@ -22,9 +22,9 @@ def connect():
             f.write(request.get_data())
 
         try:
-            apollo_service.save_credentials(request.args['username'], request.args['password'],
+            astra_service.save_credentials(request.args['username'], request.args['password'],
                                             request.args['keyspace'], temp_zip_path)
-            apollo_service.connect()
+            astra_service.connect()
         finally:
             os.remove(temp_zip_path)
 
@@ -32,7 +32,7 @@ def connect():
 
     if request.method == 'GET':
 
-        resp = apollo_service.check_connection()
+        resp = astra_service.check_connection()
 
         if resp is True:
             status_code = 200
@@ -54,7 +54,7 @@ def test_credentials():
     status_code = 400
 
     try:
-        test_connection = apollo_service.test_credentials(request.args['username'], request.args['password'],
+        test_connection = astra_service.test_credentials(request.args['username'], request.args['password'],
                                                           request.args['keyspace'], temp_zip_path)
         resp = {'success': test_connection}
         if resp['success'] is True:

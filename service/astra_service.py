@@ -6,7 +6,7 @@ from dao.spacecraft_speed_dao import SpacecraftSpeedDAO
 from dao.spacecraft_temperature_dao import SpacecraftTemperatureDAO
 
 
-class ApolloService(object):
+class AstraService(object):
 
     spacecraft_journey_catalog_dao = None
     spacecraft_location_dao = None
@@ -106,4 +106,4 @@ class ApolloService(object):
         self.get_spacecraft_temperature_dao().write_readings(spacecraft_name, journey_id, data)
 
 
-apollo_service = ApolloService()
+astra_service = AstraService()
