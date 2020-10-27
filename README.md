@@ -3,6 +3,8 @@
 This sample Python backend provides a REST API service that is used with the [Getting Started with Astra UI](https://github.com/DataStax-Examples/getting-started-with-astra-ui) to show a
 simple example of how to connect to and query DataStax Astra databases.
 
+Create a free-forever Cassandra Database with DataStax Astra: [click here to get started](https://astra.datastax.com/register?utm_source=devplay&utm_medium=github&utm_campaign=getting-started-with-astra-python) 🚀
+
 Contributor(s):
 * [Chris Splinter](https://github.com/csplinter)
 * [Madhavan Sridharan](https://github.com/msmygit)
