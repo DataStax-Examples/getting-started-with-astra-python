@@ -1,5 +1,5 @@
 {
-  "name": "Getting Started with Apache Cassandra and Python using Astra",
+  "name": "Getting Started with Cassandra + Python + Astra",
   "description": "This sample Python backend provides a REST API service that is used with the Getting Started with Astra UI to show a simple example of how to connect to and query DataStax Astra databases.",
   "duration": "50 minutes",
   "skillLevel": "Intermediate",
