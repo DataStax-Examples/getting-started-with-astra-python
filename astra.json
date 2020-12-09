@@ -4,7 +4,11 @@
   "duration": "50 minutes",
   "skillLevel": "Intermediate",
   "githubUrl": "https://github.com/DataStax-Examples/getting-started-with-astra-python",
-  "tags": [{ "name": "labs", "color": "warning" }, { "name": "python" }],
+  "tags": [
+    { "name": "labs", "color": "warning" },
+    { "name": "python" },
+    { "name": "python driver" }
+  ],
   "category": "apps",
   "priority": 3
 }
