@@ -1,6 +1,6 @@
 {
-  "name": "Getting Started with Python + AstraDB",
-  "description": "This sample Python backend provides a REST API service that is used with the Getting Started with Astra UI to show a simple example of how to connect to and query DataStax Astra databases.",
+  "name": "Getting Started with Python + Astra DB",
+  "description": "This sample Python backend provides a REST API service that is used with the Getting Started with Astra UI to show a simple example of how to connect to and query DataStax Astra DBs.",
   "duration": "50 minutes",
   "skillLevel": "Intermediate",
   "githubUrl": "https://github.com/DataStax-Examples/getting-started-with-astra-python",

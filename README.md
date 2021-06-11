@@ -1,9 +1,9 @@
 <!--- STARTEXCLUDE --->
-# Getting Started with Apache Cassandra™ and Python using DataStax Astra
+# Getting Started with Apache Cassandra™ and Python using DataStax Astra DB
 *50 minutes, Intermediate, [Start Building](https://github.com/DataStax-Examples/getting-started-with-astra-python#prerequisites)*
 
 This sample Python backend provides a REST API service that is used with the [Getting Started with Astra UI](https://github.com/DataStax-Examples/getting-started-with-astra-ui) to show a
-simple example of how to connect to and query DataStax Astra databases.
+simple example of how to connect to and query DataStax Astra DBs.
 <!--- ENDEXCLUDE --->
 
 
@@ -11,14 +11,14 @@ simple example of how to connect to and query DataStax Astra databases.
 
 
 ## Objectives
-- How to connect to DataStax Astra using the secure connect bundle
+- How to connect to DataStax Astra DB using the secure connect bundle
 - How to share a DataStax Driver Session throughout a Python application
 - How to expose a basic REST API using the DataStax Driver
   
 ## How this works
 This project is built in Python and uses Flask to expose a REST API backend for use with the [Getting Started with Astra UI](https://github.com/DataStax-Examples/getting-started-with-astra-ui).
 
-This application is the middle man that receives requests from the UI web page and serves data from the underlying DataStax Astra database.
+This application is the middle man that receives requests from the UI web page and serves data from the underlying DataStax Astra DB.
 
 ## Get Started
 To build and play with this app, follow the build instructions that are located here: [https://github.com/DataStax-Examples/getting-started-with-astra-python](https://github.com/DataStax-Examples/getting-started-with-astra-python#prerequisites)
